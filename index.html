@@ -1,28 +1,918 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aidan Graham - Software Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-card: #1a1f2e;
+            --accent-cyan: #00ffcc;
+            --accent-blue: #3b82f6;
+            --text-primary: #e5e7eb;
+            --text-secondary: #9ca3af;
+            --border-color: #2d3748;
+            --code-bg: #0d1117;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 255, 204, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Floating particles */
+        .particle {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            opacity: 0.3;
+            pointer-events: none;
+            animation: float 20s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(100px, -100px); }
+            50% { transform: translate(-50px, -200px); }
+            75% { transform: translate(150px, -150px); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        header {
+            padding: 2rem 0;
+            position: sticky;
+            top: 0;
+            background: rgba(10, 14, 23, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 100;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-cyan);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding: 4rem 0;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-cyan);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #ffffff 0%, var(--text-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.8s both;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 1s both;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            border: 2px solid var(--accent-cyan);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 204, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        /* Skills Section */
+        .section {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-cyan);
+            margin: 1rem auto 0;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .skill-category {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+            animation: fadeInUp 0.6s ease-out both;
+        }
+
+        .skill-category:nth-child(1) { animation-delay: 0.1s; }
+        .skill-category:nth-child(2) { animation-delay: 0.2s; }
+        .skill-category:nth-child(3) { animation-delay: 0.3s; }
+        .skill-category:nth-child(4) { animation-delay: 0.4s; }
+
+        .skill-category:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 10px 30px rgba(0, 255, 204, 0.1);
+        }
+
+        .skill-category h3 {
+            color: var(--accent-cyan);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .skill-category ul {
+            list-style: none;
+        }
+
+        .skill-category li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .skill-category li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+            animation: fadeInUp 0.6s ease-out both;
+            position: relative;
+        }
+
+        .project-card:nth-child(1) { animation-delay: 0.1s; }
+        .project-card:nth-child(2) { animation-delay: 0.2s; }
+        .project-card:nth-child(3) { animation-delay: 0.3s; }
+        .project-card:nth-child(4) { animation-delay: 0.4s; }
+        .project-card:nth-child(5) { animation-delay: 0.5s; }
+        .project-card:nth-child(6) { animation-delay: 0.6s; }
+        .project-card:nth-child(7) { animation-delay: 0.7s; }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-content {
+            padding: 2rem;
+        }
+
+        .project-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .project-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tech-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            background: var(--code-bg);
+            color: var(--accent-cyan);
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Contact Section */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .contact-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s;
+            animation: fadeInUp 0.6s ease-out both;
+        }
+
+        .contact-card:nth-child(1) { animation-delay: 0.1s; }
+        .contact-card:nth-child(2) { animation-delay: 0.2s; }
+        .contact-card:nth-child(3) { animation-delay: 0.3s; }
+        .contact-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
+        }
+
+        .contact-card i {
+            font-size: 2rem;
+            color: var(--accent-cyan);
+            margin-bottom: 1rem;
+        }
+
+        .contact-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-card a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-card a:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .projects-grid,
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 4rem 0;
+            }
+        }
+
+        /* Scroll reveal animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.6s ease-out;
+        }
+    </style>
 </head>
+<body>
+    <!-- Floating particles -->
+    <div class="particle" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
+    <div class="particle" style="top: 30%; left: 80%; animation-delay: 2s;"></div>
+    <div class="particle" style="top: 60%; left: 10%; animation-delay: 4s;"></div>
+    <div class="particle" style="top: 80%; left: 70%; animation-delay: 6s;"></div>
+    <div class="particle" style="top: 50%; left: 50%; animation-delay: 8s;"></div>
 
-<body style="background-color: dimgray;">
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">&lt;Glitxh/&gt;</div>
+                <ul class="nav-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="https://github.com/Glitxhhh?tab=repositories" target="_blank">GitHub</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-<div class="sidenav">
-    <a href="index.html">Home</a>
-    <a href="projects.html">Projects</a>
-    <a href="about.html">About</a>
-    <a href="contact.html">Contact</a>
-    <a href="Modding.html">Modding</a>
-</div>
+    <!-- Hero Section -->
+    <section class="hero" id="about">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-subtitle">// Software Developer & Game Tools Specialist</div>
+                <h1>Glitxh <span style="color: var(--text-secondary); font-size: 0.5em;">(Aidan Graham)</span></h1>
+                <p>
+                    Building production-ready tools and applications with C++, Qt, and game engines. Specializing in game-related development, 
+                    reverse engineering, and cross-platform desktop solutions. From automation tools to indie games and Discord bots, 
+                    I create polished software that solves real problems and brings creative visions to life.
+                </p>
+                <div class="cta-buttons">
+                    <a href="#projects" class="btn btn-primary">View Projects</a>
+                    <a href="https://github.com/Glitxhhh?tab=repositories" target="_blank" class="btn btn-secondary">GitHub</a>
+                    <a href="https://ko-fi.com/glitxh" target="_blank" class="btn btn-secondary" style="border-color: var(--accent-cyan); color: var(--accent-cyan);">
+                        ☕ Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<div class="main">
-    <div class="header">  
-        <h1 style="text-align: center;">Welcome to Glitxh's site</h1>
-    </div>
-    
-    <p style="text-align: left;">This is my site for my projects hosted on github, and other media related to them, such as promotional materials and other links.</p>
-   
-</div>
+    <!-- Currently Working On Section -->
+    <section class="section" style="padding: 3rem 0; background: var(--bg-secondary);">
+        <div class="container">
+            <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+                <h2 class="section-title reveal" style="font-size: 2rem; margin-bottom: 2rem;">🚀 Currently Working On</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div class="skill-category reveal" style="text-align: left;">
+                        <h3 style="color: var(--accent-cyan); font-size: 1.1rem; margin-bottom: 0.5rem;">🎮 Project Maple</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Building out the crafting system and NPC dialogue trees for the 2D sandbox RPG</p>
+                    </div>
+                    <div class="skill-category reveal" style="text-align: left; animation-delay: 0.2s;">
+                        <h3 style="color: var(--accent-cyan); font-size: 1.1rem; margin-bottom: 0.5rem;">🤖 Mirai Bot</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Implementing new moderation features and custom command framework in D++</p>
+                    </div>
+                    <div class="skill-category reveal" style="text-align: left; animation-delay: 0.4s;">
+                        <h3 style="color: var(--accent-cyan); font-size: 1.1rem; margin-bottom: 0.5rem;">⚡ Performance Tools</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Exploring new game optimization techniques and reverse engineering projects</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-</body>
-</html>
+    <!-- GitHub Stats Section -->
+    <section class="section" style="background: var(--bg-secondary); padding: 4rem 0;">
+        <div class="container">
+            <h2 class="section-title reveal">GitHub Activity</h2>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 2rem; margin-top: 3rem;">
+                <img src="https://github-readme-stats.vercel.app/api?username=Glitxhhh&show_icons=true&theme=tokyonight&hide_border=true&bg_color=1a1f2e&title_color=00ffcc&icon_color=3b82f6&text_color=e5e7eb&include_all_commits=true&count_private=true" alt="GitHub Stats" style="max-width: 100%; height: auto; border-radius: 12px;">
+                <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Glitxhhh&layout=compact&theme=tokyonight&hide_border=true&bg_color=1a1f2e&title_color=00ffcc&text_color=e5e7eb&langs_count=8" alt="Top Languages" style="max-width: 100%; height: auto; border-radius: 12px;">
+                <img src="https://github-readme-streak-stats.herokuapp.com/?user=Glitxhhh&theme=tokyonight&hide_border=true&background=1a1f2e&ring=00ffcc&fire=00ffcc&currStreakLabel=00ffcc&sideLabels=00ffcc&dates=e5e7eb" alt="GitHub Streak" style="max-width: 100%; height: auto; border-radius: 12px;">
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section" id="skills">
+        <div class="container">
+            <h2 class="section-title reveal">Technical Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Languages</h3>
+                    <ul>
+                        <li>C++ (Advanced)</li>
+                        <li>C</li>
+                        <li>C#</li>
+                        <li>Python</li>
+                        <li>Rust</li>
+                        <li>JavaScript</li>
+                        <li>Java</li>
+                        <li>Assembly</li>
+                        <li>Ruby</li>
+                        <li>PHP</li>
+                        <li>Lua</li>
+                        <li>GDScript</li>
+                        <li>HTML5</li>
+                        <li>SQL</li>
+                        <li>Bash/Shell</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Frameworks & Libraries</h3>
+                    <ul>
+                        <li>Qt (QtWidgets, QtCore)</li>
+                        <li>D++ (Discord C++)</li>
+                        <li>Godot Engine</li>
+                        <li>CMake</li>
+                        <li>Visual Studio</li>
+                        <li>Git</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Platforms</h3>
+                    <ul>
+                        <li>Windows</li>
+                        <li>Linux (CachyOS)</li>
+                        <li>Cross-platform Dev</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Specializations</h3>
+                    <ul>
+                        <li>Game Development</li>
+                        <li>Game Tool Development</li>
+                        <li>Reverse Engineering</li>
+                        <li>API Integration</li>
+                        <li>GUI Design</li>
+                        <li>Build Automation</li>
+                        <li>Bot Development</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Stack Section -->
+    <section class="section" style="padding: 4rem 0; background: var(--bg-secondary);">
+        <div class="container">
+            <h2 class="section-title reveal">Technology Stack</h2>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 3rem; max-width: 1000px; margin-left: auto; margin-right: auto;">
+                <img src="https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white" alt="C++" style="height: 35px;">
+                <img src="https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white" alt="C" style="height: 35px;">
+                <img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white" alt="C#" style="height: 35px;">
+                <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" style="height: 35px;">
+                <img src="https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white" alt="Rust" style="height: 35px;">
+                <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript" style="height: 35px;">
+                <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java" style="height: 35px;">
+                <img src="https://img.shields.io/badge/Assembly-654FF0?style=for-the-badge&logo=assemblyscript&logoColor=white" alt="Assembly" style="height: 35px;">
+                <img src="https://img.shields.io/badge/Ruby-CC342D?style=for-the-badge&logo=ruby&logoColor=white" alt="Ruby" style="height: 35px;">
+                <img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP" style="height: 35px;">
+                <img src="https://img.shields.io/badge/Lua-2C2D72?style=for-the-badge&logo=lua&logoColor=white" alt="Lua" style="height: 35px;">
+                <img src="https://img.shields.io/badge/GDScript-478CBF?style=for-the-badge&logo=godot-engine&logoColor=white" alt="GDScript" style="height: 35px;">
+                <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" style="height: 35px;">
+                <img src="https://img.shields.io/badge/Qt-41CD52?style=for-the-badge&logo=qt&logoColor=white" alt="Qt" style="height: 35px;">
+                <img src="https://img.shields.io/badge/Godot-478CBF?style=for-the-badge&logo=godot-engine&logoColor=white" alt="Godot" style="height: 35px;">
+                <img src="https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white" alt="CMake" style="height: 35px;">
+                <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git" style="height: 35px;">
+                <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" alt="Linux" style="height: 35px;">
+                <img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" style="height: 35px;">
+                <img src="https://img.shields.io/badge/Steam-000000?style=for-the-badge&logo=steam&logoColor=white" alt="Steam" style="height: 35px;">
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="section" id="projects">
+        <div class="container">
+            <h2 class="section-title reveal">Featured Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>Project Maple</h3>
+                        <p>
+                            Top-down 2D sandbox RPG built in Godot Engine, inspired by classic Dragon Quest, Final Fantasy, 
+                            and Stardew Valley. Features rich world exploration, crafting systems, and nostalgic JRPG 
+                            mechanics with modern indie sensibilities. A passion project bringing together retro gaming 
+                            charm with contemporary game design.
+                        </p>
+                        <div class="tech-tags">
+                            <span class="tech-tag">Godot</span>
+                            <span class="tech-tag">GDScript</span>
+                            <span class="tech-tag">2D RPG</span>
+                            <span class="tech-tag">Game Design</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>Mirai Discord Bot</h3>
+                        <p>
+                            High-performance Discord bot built with D++ (C++) featuring advanced server management, 
+                            moderation tools, custom commands, and interactive features. Leverages C++ for speed and 
+                            efficiency with robust async handling and scalable architecture for large communities.
+                        </p>
+                        <div class="tech-tags">
+                            <span class="tech-tag">C++</span>
+                            <span class="tech-tag">D++</span>
+                            <span class="tech-tag">Discord API</span>
+                            <span class="tech-tag">Async</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>Hytale Avatar Editor</h3>
+                        <p>
+                            Offline character customization tool for Hytale. Allows full control over avatar appearance 
+                            including clothing, colors, and accessories. Built with reverse-engineered game data parsing 
+                            and features a user-friendly interface for editing character parameters outside the game.
+                        </p>
+                        <div class="tech-tags">
+                            <span class="tech-tag">C++</span>
+                            <span class="tech-tag">Qt</span>
+                            <span class="tech-tag">Reverse Engineering</span>
+                            <span class="tech-tag">Game Tools</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>Fortnite AFK XP Monitor</h3>
+                        <p>
+                            Cross-platform monitoring tool built with Qt C++ that tracks user activity across PC client, 
+                            GeForce NOW, and Amazon Luna. Features modern dark theme UI with professional styling and 
+                            automated deployment with code signing.
+                        </p>
+                        <div class="tech-tags">
+                            <span class="tech-tag">C++</span>
+                            <span class="tech-tag">Qt</span>
+                            <span class="tech-tag">CMake</span>
+                            <span class="tech-tag">Cross-platform</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>Steam Ticket Generator</h3>
+                        <p>
+                            Qt C++ application with Steam API integration for authentication system research. 
+                            Converted from Python and Rust prototypes to production C++ with full GUI. 
+                            Optimized build system with CMake and Visual Studio integration.
+                        </p>
+                        <div class="tech-tags">
+                            <span class="tech-tag">C++</span>
+                            <span class="tech-tag">Qt</span>
+                            <span class="tech-tag">Steam API</span>
+                            <span class="tech-tag">Authentication</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>Game Modification Tools</h3>
+                        <p>
+                            Collection of C++ DLL projects featuring injection and hooking solutions for game enhancement. 
+                            Includes language translation overlays and character customization parsers with methodical 
+                            debugging and comprehensive error handling.
+                        </p>
+                        <div class="tech-tags">
+                            <span class="tech-tag">C++</span>
+                            <span class="tech-tag">DLL Injection</span>
+                            <span class="tech-tag">Hooking</span>
+                            <span class="tech-tag">Reverse Engineering</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card" style="grid-column: 1 / -1;">
+                    <div class="project-content" style="text-align: center;">
+                        <h3>More on GitHub</h3>
+                        <p>
+                            Check out my other projects including automation tools, API integrations, game utilities, 
+                            and experimental software. Always working on something new and interesting!
+                        </p>
+                        <div style="margin-top: 1.5rem;">
+                            <a href="https://github.com/Glitxhhh?tab=repositories" target="_blank" class="btn btn-primary" style="display: inline-block; padding: 0.75rem 1.5rem; font-size: 0.9rem;">
+                                View All Projects →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fun Facts Section -->
+    <section class="section" style="padding: 4rem 0; background: var(--bg-secondary);">
+        <div class="container">
+            <h2 class="section-title reveal">⚡ Quick Facts</h2>
+            <div style="max-width: 800px; margin: 2rem auto; display: grid; gap: 1.5rem;">
+                <div class="skill-category reveal" style="padding: 1.5rem;">
+                    <div style="display: flex; align-items: start; gap: 1rem;">
+                        <span style="font-size: 2rem;">💭</span>
+                        <div>
+                            <h3 style="color: var(--accent-cyan); margin-bottom: 0.5rem;">Development Philosophy</h3>
+                            <p style="color: var(--text-secondary);">Build tools that actually solve problems. Write clean code. Never stop learning. And always push the boundaries of what's possible.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-category reveal" style="padding: 1.5rem; animation-delay: 0.2s;">
+                    <div style="display: flex; align-items: start; gap: 1rem;">
+                        <span style="font-size: 2rem;">🔧</span>
+                        <div>
+                            <h3 style="color: var(--accent-cyan); margin-bottom: 0.5rem;">What I'm Learning</h3>
+                            <p style="color: var(--text-secondary);">Advanced game engine architecture, network programming for multiplayer systems, and optimization techniques for high-performance applications</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-category reveal" style="padding: 1.5rem; animation-delay: 0.4s;">
+                    <div style="display: flex; align-items: start; gap: 1rem;">
+                        <span style="font-size: 2rem;">🎯</span>
+                        <div>
+                            <h3 style="color: var(--accent-cyan); margin-bottom: 0.5rem;">Current Focus</h3>
+                            <p style="color: var(--text-secondary);">Developing Project Maple with Godot, enhancing Mirai bot with D++, and creating production-ready Qt applications for game utilities</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section" id="contact">
+        <div class="container">
+            <h2 class="section-title reveal">Get In Touch</h2>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">📧</div>
+                    <h3>Email</h3>
+                    <a href="/cdn-cgi/l/email-protection#23424a47424d0d4451424b424e4f554f1463444e424a4f0d404c4e"><span class="__cf_email__" data-cfemail="50313934313e7e37223138313d3c263c6710373d31393c7e333f3d">[email&#160;protected]</span></a>
+                </div>
+
+                <div class="contact-card">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">💻</div>
+                    <h3>GitHub</h3>
+                    <a href="https://github.com/Glitxhhh?tab=repositories" target="_blank">@Glitxhhh</a>
+                </div>
+
+                <div class="contact-card">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">🎮</div>
+                    <h3>Discord</h3>
+                    <a href="https://discord.com/users/212243828831289344" target="_blank">@Glitxhhh</a>
+                </div>
+
+                <div class="contact-card">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">☕</div>
+                    <h3>Support My Work</h3>
+                    <a href="https://ko-fi.com/glitxh" target="_blank">Ko-fi</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Glitxh (Aidan Graham). All rights reserved.</p>
+            <p style="margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;">
+                Built with passion for code and design
+            </p>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Scroll reveal animation
+        const reveals = document.querySelectorAll('.reveal');
+        
+        const revealOnScroll = () => {
+            reveals.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll(); // Initial check
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add more particles dynamically
+        const createParticle = () => {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.left = Math.rando
